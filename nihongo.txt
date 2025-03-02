@@ -1,0 +1,214 @@
+==English to Japanese Section==
+I 
+watashi 
+
+Me
+watashi
+
+store
+mise
+
+go
+iku
+
+buy
+kau
+
+ramen
+ramen
+
+notice
+kidzuku
+
+of
+no
+
+no
+nai
+
+tough
+kibishi
+
+battle
+tatakai
+
+believe
+shinjiru
+
+I'll
+watashi wa suru
+
+never
+ichido mo nai
+
+in
+ni
+
+friendship
+yujo
+
+power
+chikara
+
+surrender
+kofuku
+
+English
+Eigo
+
+into
+ni
+
+translate
+honyaku suru
+
+sentence
+bun
+
+input
+nyuryoku
+
+can
+dekiru
+
+final
+saishu
+
+form
+keitai
+
+not
+nai
+
+even
+sura
+
+spirit
+tamashi
+
+egg
+tamago
+
+my
+watashi no
+
+at
+de
+
+in
+ni
+
+chopsticks
+hashi
+
+==Japanese to English Section==
+hashi
+chopsticks
+
+no
+of
+
+kawaii
+cute
+
+desu
+is
+
+nakama
+comrade
+
+senpai
+senior
+
+kohai
+junior
+
+sushi
+sushi
+
+nya
+meow
+
+saishu
+final
+
+wa
+(topic marker)
+
+ga
+(subject marker)
+
+ka
+(question marker)
+
+de
+(place marker)
+
+ni
+(destination marker)
+
+kara
+from
+
+made
+to
+
+yokai
+monster
+
+ryu
+dragon
+
+kami
+divine
+
+nami
+wave
+
+hito
+person
+
+ronin
+wave person
+
+kaze
+wind
+
+
+==Sample Sentences Section==
+
+no no no - ERROR: AMBIGUOUS TRANSLATION
+1 "Believe in the power of friendship, kawaii desu!"
+2 I'll never surrender, no matter how tough the battle, nya!
+3 This isn't even my final form, notice me, senpai!
+4 I'll protect everyone with my nakama spirit, senpai!
+5 The power of my heart will pierce through the heavens, uwu!
+6 I must become stronger to protect the ones I love, nyaa!
+7 You may be strong, but I fight for my dreams, desu!
+8 I'll surpass my limits and prove the impossible is possible, senpai!
+9 My burning passion will never be extinguished, notice me, senpai!
+10 I'll show you the true meaning of 'never give up,' kawaii desu!
+11 Please enter a sentence to translate into English
+
+1 Aa, Tokyo no nigiwai na machi, yume ga kanau basho desu ne!
+1 Ah, the bustling streets of Tokyo, where dreams come true!
+2 Shibuya no kosaten de aimashou, soko wa itsumo nigiyaka desu!
+2 Let's meet up at Shibuya Crossing, it's always so lively there!
+3 Neon no akari ga yoru no machi o terasu no ga daisuki desu.
+3 I love how the neon lights illuminate the city at night.
+4 Shinjuku no atarashii rāmen-ya o tameshite miyou, sugoku oishii to kiita koto ga aru yo.
+4 We should try that new ramen place in Shinjuku, I heard it's amazing.
+5 Otaku shoppingu no tame ni Akihabara ni iku beki desu!
+5 Time to hit up Akihabara for some serious otaku shopping!
+6 Mata michi ni mayoita, honto ni Tokyo no roji wa meiro mitai da wa.
+6 I'm lost again; I swear these Tokyo alleys are a maze.
+7 Ueno koen no sakura no kisetsu wa akumaku desu ne.
+7 This cherry blossom season in Ueno Park is absolutely breathtaking.
+8 Tokyo Dizunīrando ni iketara ii na!
+8 I wish we could visit Tokyo Disneyland while we're here!
+9 Harajuku fasshon wa yunikku de katsuki ni afureteimasu, anata mo so omoimasen ka?
+9 Harajuku fashion is so unique and vibrant, don't you think?
+10 Asakusa kara matcha aisu ga tabetai na, kanarazu tameshite miru beki da yo!
+10 I'm craving some matcha ice cream from Asakusa, it's a must-try!
+
+
