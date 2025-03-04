@@ -1,0 +1,686 @@
+        -:    0:Source:main.cc
+        -:    0:Graph:main.gcno
+        -:    0:Data:main.gcda
+        -:    0:Runs:1
+        -:    1:#include "/public/read.h"
+        -:    2:#include <gtest/gtest.h>
+        -:    3:#include <sys/types.h>
+        -:    4:#include <vector>
+        -:    5:#include <unordered_set>
+        -:    6:#include <unordered_map>
+        -:    7:#include <iostream>
+        -:    8:#include <chrono>
+        -:    9:using namespace std;
+        -:   10:
+        -:   11:// DO NOT TOUCH THESE OR YOU WILL HAVE A BAD TIME!
+        -:   12:unordered_map<string, string> eTranslations = { {"SAYONARA", "GOODBYE"}, {"KONNICHIWA", "HELLO"}, {"ARIGATO", "THANKS"},
+        -:   13:	{"WATASHI", "I"}, {"SUSHI", "SUSHI"}, {"UWU", "UWU"}, {"SENPAI", "SENIOR"}
+        -:   14:}; // Japanese to English */
+        -:   15:unordered_map<string, string> jTranslations = { {"GOODBYE", "SAYONARA"}, {"HELLO", "KONNICHIWA"}, {"THANKS", "ARIGATO"},
+        -:   16:	{"I", "WATASHI"}, {"SUSHI", "SUSHI"}, {"UWU", "UWU"}, {"SENIOR", "SENPAI"}
+        -:   17:}; // English to Japanese */
+        -:   18:
+        -:   19:vector<string> digits = { "ZERO", "ICHI", "NI", "SAN", "YON", "GO", "ROKU", "NANA",
+        -:   20:                          "HACHI", "KYUU"
+        -:   21:                        };
+        -:   22:vector<string> powers = { "EMPTY", "JYUU", "HYAKU", "SEN", "MAN" };
+        -:   23:
+        -:   24:unordered_set<string> dict_db;
+        -:   25:
+        -:   26:unordered_map<string, string> samplesentences;
+        -:   27:
+        -:   28:
+        -:   29:
+        -:   30:const int MIN = 0;
+        -:   31:const int MAX = 1'009'999;
+        -:   32:
+        -:   33:// Reaper mains understand
+    #####:   34:void die(const string &s = "BAD INPUT!") {
+    #####:   35:	cout << s << endl;
+    #####:   36:	exit(EXIT_FAILURE);
+        -:   37:}
+        -:   38:// for test cases: true = English to Japanese. false = Japanese to English
+       28:   39:string translator(bool flag, const string &key) {
+       28:   40:	string rev;
+       28:   41:	if (flag) {
+       21:   42:	rev = (jTranslations.contains(key)) ? jTranslations.at(key) : "NOT FOUND";
+        -:   43:	}
+       14:   44:	else if (!flag) {
+       21:   45:	rev = (eTranslations.contains(key)) ? eTranslations.at(key) : "NOT FOUND";
+        -:   46:	}
+       28:   47:	return rev;
+       28:   48:}
+        -:   49:/*
+        -:   50:string translator2(bool flag, const int &key) {
+        -:   51:	if (flag) return digits.at(key);
+        -:   52:	else if (!flag) return powers.at(key);
+        -:   53:}
+        -:   54:*/
+       21:   55:string warui(int i) {
+        -:   56:	//maybe try using a vector. % by 10 then store, / by 10. repeat. use pushfront.
+        -:   57:	/*
+        -:   58:	if (i < MIN or i > MAX) //return "BAD INPUT!";
+        -:   59:	string retVal;
+        -:   60:	i = 10203;
+        -:   61:	int x = 1;
+        -:   62:	//retVal += to_string(x) + " ";
+        -:   63://	return digits.at(0);
+        -:   64:	vector<string> nums;
+        -:   65:	while (true) {
+        -:   66:	x = i % 10;
+        -:   67:	nums.insert(nums.begin(), powers.at(x));
+        -:   68:	i = i / 10;
+        -:   69:	if (i <= 0) break;
+        -:   70:	}
+        -:   71:	for (auto &c : nums) {japnsentence 
+        -:   72:		cout << c;
+        -:   73:		return c;
+        -:   74:	}
+        -:   75:	cout << endl;*/
+       21:   76:	if (i < MIN or i > MAX) return "BAD INPUT!";
+       14:   77:	string retVal;
+       14:   78:	int x = i;
+       42:   79:	retVal += to_string(x) + " ";
+       14:   80:	if (x >= 1'000'000) {
+    #####:   81:		int millis = x / 1'000'000;
+    #####:   82:		if (millis == 1) retVal += powers.at(2) + " " + powers.at(4);
+    #####:   83:		else retVal += digits.at(millis) + " " + powers.at(4);
+    #####:   84:		x -= millis * 1'000'000;
+    #####:   85:		if (x) retVal += " ";
+        -:   86:	}
+       14:   87:	if (x >= 100'000) {
+        1:   88:		int hunThous = x / 100'000;
+        2:   89:		if (hunThous == 1) retVal += "JUU " + powers.at(4);
+    #####:   90:		else retVal += (digits.at(hunThous) + " " + powers.at(4));
+        1:   91:		x -= hunThous * 100'000;
+       1*:   92:		if (x) retVal += " ";
+        -:   93:	}
+       13:   94:	if (x >= 10'000) {
+        1:   95:		int tenThous = x / 10'000;
+        1:   96:		if (tenThous <= 10) retVal += digits.at(tenThous);
+    #####:   97:		else if (tenThous > 10 and tenThous < 20) {
+    #####:   98:			retVal += powers.at(1);
+    #####:   99:			retVal += " ";
+    #####:  100:			retVal += digits.at((tenThous % 10));
+        -:  101:		}
+    #####:  102:		else if (tenThous >= 20 and tenThous < 100) {
+    #####:  103:			retVal += digits.at(tenThous / 10);
+    #####:  104:			retVal += " ";
+    #####:  105:			retVal += powers.at(1);
+    #####:  106:			retVal += " ";
+    #####:  107:			retVal += digits.at((tenThous % 10));
+        -:  108:		}
+    #####:  109:		else if (tenThous == 100) retVal += powers.at(2);
+        2:  110:		retVal += (" " + powers.at(3));
+        1:  111:		x -= tenThous * 10'000;
+    #####:  112:		if (x) retVal += " ";
+        -:  113:	}
+       13:  114:	if (x >= 1'000) {
+        6:  115:		int thous = x / 1'000;
+        6:  116:		if (thous < 1 or thous > 9) {
+    #####:  117:			cout << "BAD INPUT!" << endl;
+    #####:  118:			exit(EXIT_FAILURE);
+        -:  119:		}
+       6*:  120:		if (thous == 1) retVal += powers.at(3);
+        6:  121:		else if (thous == 3) retVal += "SAN ZEN";
+        8:  122:		else if (thous == 8) retVal += "HASSEN";
+        4:  123:		else retVal += (digits.at(thous) + " SEN");
+        6:  124:		x -= thous * 1'000;
+        6:  125:		if (x) retVal += " ";
+        -:  126:	}
+       14:  127:	if (x >= 100) {
+        6:  128:		int hundreds = x / 100;
+       6*:  129:		if (hundreds < 1 or hundreds > 10) die();
+       6*:  130:		if (hundreds == 1) retVal += powers.at(2);
+        6:  131:		else if (hundreds == 3) retVal += "SAN BYAKU";
+        4:  132:		else if (hundreds == 6) retVal += "ROPPYAKU";
+        8:  133:		else if (hundreds == 8) retVal += "HAPPYAKU";
+        4:  134:		else retVal += (digits.at(hundreds) + " HYAKU");
+        6:  135:		x -= hundreds * 100;
+        6:  136:		if (x) retVal += " ";
+        -:  137:	}
+       14:  138:	if (x >= 10) {
+        8:  139:		int tens = x / 10;
+        8:  140:		if (tens < 1 or tens > 9) {
+    #####:  141:			die();
+        -:  142:		}
+       8*:  143:		if (tens == 1) retVal += powers.at(1);
+        -:  144:		else {
+        8:  145:			retVal += digits.at(tens);
+        8:  146:			retVal += " ";
+        8:  147:			retVal += powers.at(1);
+        -:  148:		}
+        8:  149:		x -= tens * 10;
+        8:  150:		if (x) retVal += " ";
+        -:  151:	}
+      14*:  152:	if (i == 0) retVal += digits.at(i);
+       14:  153:	else if (x > 0 and x < 10) retVal += digits.at(x);
+       14:  154:	retVal += "\n";
+       14:  155:	return retVal;
+        -:  156:
+        -:  157:
+      41*:  158:}
+        -:  159:
+        1:  160:void FillDict() {
+        1:  161:	ifstream ins("/usr/share/dict/words");
+   104336:  162:	while (ins) {
+   104335:  163:		string temp = readline(ins);
+   104335:  164:		dict_db.insert(temp);
+   104335:  165:	}
+        1:  166:}
+    #####:  167:void PrintDict() {
+    #####:  168:	for (auto i = dict_db.begin(); i != dict_db.end(); i++) {
+    #####:  169:		cout << *i << endl;
+        -:  170:	}
+    #####:  171:}
+    #####:  172:void FindInDict(string &str) {
+    #####:  173:	if (dict_db.count(str)) {
+    #####:  174:		cout << "Found it with count" << endl;
+        -:  175:	}
+    #####:  176:}
+        -:  177:
+      393:  178:string uppercase(const string &s) {
+      393:  179:	string retVal;
+     6121:  180:	for (const char &c : s) retVal += toupper(c);
+      393:  181:	return retVal;
+    =====:  182:}
+    #####:  183:string lowercase(const string &s) {
+    #####:  184:	string retVal;
+    #####:  185:	for (const char &c : s) retVal += tolower(c);
+    #####:  186:	return retVal;
+    =====:  187:}
+        -:  188:
+        -:  189:
+        -:  190:// TESTS
+        -:  191:// TODO: Make 7 test cases for each one
+       3*:  192:TEST(EnglToJapnTranslator, GoodTests) {
+       2*:  193:	EXPECT_EQ(translator(true, "GOODBYE"), "SAYONARA");
+       2*:  194:	EXPECT_EQ(translator(true, "HELLO"), "KONNICHIWA");
+       2*:  195:	EXPECT_EQ(translator(true, "THANKS"), "ARIGATO");
+       2*:  196:	EXPECT_EQ(translator(true, "I"), "WATASHI");
+       2*:  197:	EXPECT_EQ(translator(true, "SUSHI"), "SUSHI");
+       2*:  198:	EXPECT_EQ(translator(true, "UWU"), "UWU");
+       2*:  199:	EXPECT_EQ(translator(true, "SENIOR"), "SENPAI");
+        1:  200:}
+------------------
+_ZN35EnglToJapnTranslator_GoodTests_TestD0Ev:
+        1:  192:TEST(EnglToJapnTranslator, GoodTests) {
+------------------
+_ZN35EnglToJapnTranslator_GoodTests_TestD2Ev:
+    #####:  192:TEST(EnglToJapnTranslator, GoodTests) {
+------------------
+_ZN35EnglToJapnTranslator_GoodTests_Test8TestBodyEv:
+        1:  192:TEST(EnglToJapnTranslator, GoodTests) {
+       2*:  193:	EXPECT_EQ(translator(true, "GOODBYE"), "SAYONARA");
+       2*:  194:	EXPECT_EQ(translator(true, "HELLO"), "KONNICHIWA");
+       2*:  195:	EXPECT_EQ(translator(true, "THANKS"), "ARIGATO");
+       2*:  196:	EXPECT_EQ(translator(true, "I"), "WATASHI");
+       2*:  197:	EXPECT_EQ(translator(true, "SUSHI"), "SUSHI");
+       2*:  198:	EXPECT_EQ(translator(true, "UWU"), "UWU");
+       2*:  199:	EXPECT_EQ(translator(true, "SENIOR"), "SENPAI");
+        1:  200:}
+------------------
+        -:  201:
+       3*:  202:TEST(JapnToEnglTranslator, GoodTests) {
+       2*:  203:	EXPECT_EQ(translator(false, "UWU"), "UWU");
+       2*:  204:	EXPECT_EQ(translator(false, "SAYONARA"), "GOODBYE");
+       2*:  205:	EXPECT_EQ(translator(false, "KONNICHIWA"), "HELLO");
+       2*:  206:	EXPECT_EQ(translator(false, "ARIGATO"), "THANKS");
+       2*:  207:	EXPECT_EQ(translator(false, "WATASHI"), "ME");
+       2*:  208:	EXPECT_EQ(translator(false, "SUSHI"), "SUSHI");
+       2*:  209:	EXPECT_EQ(translator(false, "SENPAI"), "SENIOR");
+        1:  210:}
+------------------
+_ZN35JapnToEnglTranslator_GoodTests_TestD0Ev:
+        1:  202:TEST(JapnToEnglTranslator, GoodTests) {
+------------------
+_ZN35JapnToEnglTranslator_GoodTests_TestD2Ev:
+    #####:  202:TEST(JapnToEnglTranslator, GoodTests) {
+------------------
+_ZN35JapnToEnglTranslator_GoodTests_Test8TestBodyEv:
+        1:  202:TEST(JapnToEnglTranslator, GoodTests) {
+       2*:  203:	EXPECT_EQ(translator(false, "UWU"), "UWU");
+       2*:  204:	EXPECT_EQ(translator(false, "SAYONARA"), "GOODBYE");
+       2*:  205:	EXPECT_EQ(translator(false, "KONNICHIWA"), "HELLO");
+       2*:  206:	EXPECT_EQ(translator(false, "ARIGATO"), "THANKS");
+       2*:  207:	EXPECT_EQ(translator(false, "WATASHI"), "ME");
+       2*:  208:	EXPECT_EQ(translator(false, "SUSHI"), "SUSHI");
+       2*:  209:	EXPECT_EQ(translator(false, "SENPAI"), "SENIOR");
+        1:  210:}
+------------------
+        -:  211:
+       3*:  212:TEST(EnglToJapnTranslator, BadTests) {
+       2*:  213:	EXPECT_EQ(translator(true, "SAYARA"), "NOT FOUND");
+       2*:  214:	EXPECT_EQ(translator(true, "Jeepers"), "NOT FOUND");
+       2*:  215:	EXPECT_EQ(translator(true, "Frick"), "NOT FOUND");
+       2*:  216:	EXPECT_EQ(translator(true, "HALP"), "NOT FOUND");
+       2*:  217:	EXPECT_EQ(translator(true, "OWKEMmmmmmmm"), "NOT FOUND");
+       2*:  218:	EXPECT_EQ(translator(true, "ASdow"), "NOT FOUND");
+       2*:  219:	EXPECT_EQ(translator(true, "ASODWE"), "NOT FOUND");
+        1:  220:}
+------------------
+_ZN34EnglToJapnTranslator_BadTests_TestD0Ev:
+        1:  212:TEST(EnglToJapnTranslator, BadTests) {
+------------------
+_ZN34EnglToJapnTranslator_BadTests_TestD2Ev:
+    #####:  212:TEST(EnglToJapnTranslator, BadTests) {
+------------------
+_ZN34EnglToJapnTranslator_BadTests_Test8TestBodyEv:
+        1:  212:TEST(EnglToJapnTranslator, BadTests) {
+       2*:  213:	EXPECT_EQ(translator(true, "SAYARA"), "NOT FOUND");
+       2*:  214:	EXPECT_EQ(translator(true, "Jeepers"), "NOT FOUND");
+       2*:  215:	EXPECT_EQ(translator(true, "Frick"), "NOT FOUND");
+       2*:  216:	EXPECT_EQ(translator(true, "HALP"), "NOT FOUND");
+       2*:  217:	EXPECT_EQ(translator(true, "OWKEMmmmmmmm"), "NOT FOUND");
+       2*:  218:	EXPECT_EQ(translator(true, "ASdow"), "NOT FOUND");
+       2*:  219:	EXPECT_EQ(translator(true, "ASODWE"), "NOT FOUND");
+        1:  220:}
+------------------
+        -:  221:
+       3*:  222:TEST(JapnToEnglTranslator, BadTests) {
+       2*:  223:	EXPECT_EQ(translator(false, "HERSHEY"), "NOT FOUND");
+       2*:  224:	EXPECT_EQ(translator(false, "Chihapouse"), "NOT FOUND");
+       2*:  225:	EXPECT_EQ(translator(false, "Henry"), "NOT FOUND");
+       2*:  226:	EXPECT_EQ(translator(false, "Bad Test"), "NOT FOUND");
+       2*:  227:	EXPECT_EQ(translator(false, "Polisci"), "NOT FOUND");
+       2*:  228:	EXPECT_EQ(translator(false, "San Bernando"), "NOT FOUND");
+       2*:  229:	EXPECT_EQ(translator(false, "I AM ATOMIC"), "NOT FOUND");
+        1:  230:}
+------------------
+_ZN34JapnToEnglTranslator_BadTests_TestD0Ev:
+        1:  222:TEST(JapnToEnglTranslator, BadTests) {
+------------------
+_ZN34JapnToEnglTranslator_BadTests_TestD2Ev:
+    #####:  222:TEST(JapnToEnglTranslator, BadTests) {
+------------------
+_ZN34JapnToEnglTranslator_BadTests_Test8TestBodyEv:
+        1:  222:TEST(JapnToEnglTranslator, BadTests) {
+       2*:  223:	EXPECT_EQ(translator(false, "HERSHEY"), "NOT FOUND");
+       2*:  224:	EXPECT_EQ(translator(false, "Chihapouse"), "NOT FOUND");
+       2*:  225:	EXPECT_EQ(translator(false, "Henry"), "NOT FOUND");
+       2*:  226:	EXPECT_EQ(translator(false, "Bad Test"), "NOT FOUND");
+       2*:  227:	EXPECT_EQ(translator(false, "Polisci"), "NOT FOUND");
+       2*:  228:	EXPECT_EQ(translator(false, "San Bernando"), "NOT FOUND");
+       2*:  229:	EXPECT_EQ(translator(false, "I AM ATOMIC"), "NOT FOUND");
+        1:  230:}
+------------------
+        -:  231:
+       3*:  232:TEST(Warui, GoodTests) {
+       2*:  233:	EXPECT_EQ(warui(100000), "100000 JUU MAN\n");
+       2*:  234:	EXPECT_EQ(warui(9), "9 KYUU\n");
+       2*:  235:	EXPECT_EQ(warui(3), "3 SAN\n");
+       2*:  236:	EXPECT_EQ(warui(1), "1 ICHI\n");
+       2*:  237:	EXPECT_EQ(warui(2), "2 NI\n");
+       2*:  238:	EXPECT_EQ(warui(40000), "40000 YON SEN\n");
+       2*:  239:	EXPECT_EQ(warui(67), "67 ROKU JYUU NANA\n");
+        1:  240:}
+------------------
+_ZN20Warui_GoodTests_TestD0Ev:
+        1:  232:TEST(Warui, GoodTests) {
+------------------
+_ZN20Warui_GoodTests_TestD2Ev:
+    #####:  232:TEST(Warui, GoodTests) {
+------------------
+_ZN20Warui_GoodTests_Test8TestBodyEv:
+        1:  232:TEST(Warui, GoodTests) {
+       2*:  233:	EXPECT_EQ(warui(100000), "100000 JUU MAN\n");
+       2*:  234:	EXPECT_EQ(warui(9), "9 KYUU\n");
+       2*:  235:	EXPECT_EQ(warui(3), "3 SAN\n");
+       2*:  236:	EXPECT_EQ(warui(1), "1 ICHI\n");
+       2*:  237:	EXPECT_EQ(warui(2), "2 NI\n");
+       2*:  238:	EXPECT_EQ(warui(40000), "40000 YON SEN\n");
+       2*:  239:	EXPECT_EQ(warui(67), "67 ROKU JYUU NANA\n");
+        1:  240:}
+------------------
+        -:  241:
+       3*:  242:TEST(Warui, BadTests) {
+       2*:  243:	EXPECT_EQ(warui(-1), "BAD INPUT!");
+       2*:  244:	EXPECT_EQ(warui(1000000000), "BAD INPUT!");
+       2*:  245:	EXPECT_EQ(warui(-3204), "BAD INPUT!");
+       2*:  246:	EXPECT_EQ(warui(-23), "BAD INPUT!");
+       2*:  247:	EXPECT_EQ(warui(1023231333), "BAD INPUT!");
+       2*:  248:	EXPECT_EQ(warui(-1021000002), "BAD INPUT!");
+       2*:  249:	EXPECT_EQ(warui(1232323232), "BAD INPUT!");
+        -:  250:
+        1:  251:}
+------------------
+_ZN19Warui_BadTests_TestD0Ev:
+        1:  242:TEST(Warui, BadTests) {
+------------------
+_ZN19Warui_BadTests_TestD2Ev:
+    #####:  242:TEST(Warui, BadTests) {
+------------------
+_ZN19Warui_BadTests_Test8TestBodyEv:
+        1:  242:TEST(Warui, BadTests) {
+       2*:  243:	EXPECT_EQ(warui(-1), "BAD INPUT!");
+       2*:  244:	EXPECT_EQ(warui(1000000000), "BAD INPUT!");
+       2*:  245:	EXPECT_EQ(warui(-3204), "BAD INPUT!");
+       2*:  246:	EXPECT_EQ(warui(-23), "BAD INPUT!");
+       2*:  247:	EXPECT_EQ(warui(1023231333), "BAD INPUT!");
+       2*:  248:	EXPECT_EQ(warui(-1021000002), "BAD INPUT!");
+       2*:  249:	EXPECT_EQ(warui(1232323232), "BAD INPUT!");
+        -:  250:
+        1:  251:}
+------------------
+        -:  252:
+       3*:  253:TEST(Warui, EdgeTests) {
+       2*:  254:	EXPECT_EQ(warui(326), "326 SAN BYAKU NI JYUU ROKU\n");
+       2*:  255:	EXPECT_EQ(warui(3026), "3026 SAN ZEN NI JYUU ROKU\n");
+       2*:  256:	EXPECT_EQ(warui(8927), "8927 HASSEN KYUU HYAKU NI JYUU NANA\n");
+       2*:  257:	EXPECT_EQ(warui(2982), "2982 NI SEN KYUU HYAKU HACHI JYUU NI\n");
+       2*:  258:	EXPECT_EQ(warui(8325), "8325 HASSEN SAN BYAKU NI JYUU GO\n");
+       2*:  259:	EXPECT_EQ(warui(3679), "3679 SAN ZEN ROPPYAKU NANA JYUU KYUU\n");
+       2*:  260:	EXPECT_EQ(warui(5890), "5890 GO SEN HAPPYAKU KYUU JYUU\n");
+        -:  261:
+        1:  262:}
+------------------
+_ZN20Warui_EdgeTests_TestD0Ev:
+        1:  253:TEST(Warui, EdgeTests) {
+------------------
+_ZN20Warui_EdgeTests_TestD2Ev:
+    #####:  253:TEST(Warui, EdgeTests) {
+------------------
+_ZN20Warui_EdgeTests_Test8TestBodyEv:
+        1:  253:TEST(Warui, EdgeTests) {
+       2*:  254:	EXPECT_EQ(warui(326), "326 SAN BYAKU NI JYUU ROKU\n");
+       2*:  255:	EXPECT_EQ(warui(3026), "3026 SAN ZEN NI JYUU ROKU\n");
+       2*:  256:	EXPECT_EQ(warui(8927), "8927 HASSEN KYUU HYAKU NI JYUU NANA\n");
+       2*:  257:	EXPECT_EQ(warui(2982), "2982 NI SEN KYUU HYAKU HACHI JYUU NI\n");
+       2*:  258:	EXPECT_EQ(warui(8325), "8325 HASSEN SAN BYAKU NI JYUU GO\n");
+       2*:  259:	EXPECT_EQ(warui(3679), "3679 SAN ZEN ROPPYAKU NANA JYUU KYUU\n");
+       2*:  260:	EXPECT_EQ(warui(5890), "5890 GO SEN HAPPYAKU KYUU JYUU\n");
+        -:  261:
+        1:  262:}
+------------------
+        -:  263:
+        -:  264://benmark stuff 1
+        1:  265:void thingtobench() {
+        1:  266:	volatile int sum = 0;
+  1000001:  267:	for (int i = 0; i < 1000000; ++i) {
+  1000000:  268:		sum += i;
+        -:  269:	}
+        1:  270:}
+        -:  271:
+        1:  272:int main(int argc, char** argv) {
+        -:  273:
+        -:  274:
+        -:  275:
+        1:  276:	testing::InitGoogleTest(&argc, argv); // DO NOT TOUCH THIS!
+        1:  277:	enum choices{TESTS = 1, WARUI, ENGLTOJAPN, JAPNTOENGL, AUTOTRANS, INSERT, QUIT = 7};
+        -:  278:	//Inputs all the words.
+        1:  279:	FillDict();
+        1:  280:	string etoJ;
+        1:  281:	string jtoE;
+        1:  282:	string samples;
+        1:  283:	string engl;
+        1:  284:	string japn;
+        1:  285:	string sample;
+        1:  286:	string sampleoutput;
+        1:  287:	int counter1 = 0;
+        1:  288:	ifstream insMih("Mihongo.txt");
+      126:  289:	while (insMih) { // do this again for mihongo.txt. read everything from nihongo, then everything from mihongo.
+        -:  290:	
+      126:  291:		string s = readline(insMih);
+      126:  292:		if (!insMih) break;
+      125:  293:		if (s.at(0) == '=') {
+        3:  294:			if (counter1 == 0) etoJ = s;
+        2:  295:			else if (counter1 == 1) jtoE = s;
+        1:  296:			else if (counter1 == 2) samples = s;
+    #####:  297:			else die();
+        3:  298:			counter1++;
+        -:  299:		}
+      122:  300:		else if (counter1 == 1) {
+       40:  301:			string engl = s;
+       40:  302:			string japn = readline(insMih);
+       40:  303:			if (!insMih) break;
+       40:  304:			engl = uppercase(engl);
+       40:  305:			japn = uppercase(japn);
+       80:  306:			jTranslations[engl] = japn;
+      40*:  307:		}
+       82:  308:		else if (counter1 == 2) {
+       54:  309:			string japn = s;
+       54:  310:			string engl = readline(insMih);
+       54:  311:			if (!insMih) break;
+       54:  312:			engl = uppercase(engl);
+       54:  313:			japn = uppercase(japn);
+      108:  314:			eTranslations[japn] = engl;
+      54*:  315:		}
+       28:  316:		else if (counter1 == 3) {
+       28:  317:			string sent = s;
+       28:  318:			string sent1 = readline(insMih);
+       28:  319:			if (!insMih) break;
+       28:  320:			sent = uppercase(sent);
+       28:  321:			sent1 = uppercase(sent1);
+       56:  322:			samplesentences[sent] = sent1;
+      28*:  323:		}
+      126:  324:	}
+        1:  325:	string filename;
+        1:  326:	cout << "Please enter the name of your Japanese-English dictionary (/public/nihongo.txt): \n";
+        1:  327:	cin >> filename;
+        1:  328:	ifstream ins(filename);
+        1:  329:	int counter = 0;
+        -:  330://	string s = readline(ins);
+        1:  331:	string ws;
+       78:  332:	while (ins) { // do this again for mihongo.txt. read everything from nihongo, then everything from mihongo.
+        -:  333:	
+       78:  334:		string s = readline(ins);
+       78:  335:		if (!ins) break;
+       77:  336:		if (s.at(0) == '=') {
+        3:  337:			if (counter == 0) etoJ = s;
+        2:  338:			else if (counter == 1) jtoE = s;
+        1:  339:			else if (counter == 2) samples = s;
+    #####:  340:			else die();
+        3:  341:			counter++;
+        -:  342:		}
+       74:  343:		else if (counter == 1) {
+       34:  344:			string engl = s;
+       34:  345:			string japn = readline(ins);
+       34:  346:			if (!ins) break;
+       34:  347:			engl = uppercase(engl);
+       34:  348:			japn = uppercase(japn);
+       68:  349:			jTranslations[engl] = japn;
+      34*:  350:		}
+       40:  351:		else if (counter == 2) {
+       24:  352:			string japn = s;
+       24:  353:			string engl = readline(ins);
+       24:  354:			if (!ins) break;
+       24:  355:			engl = uppercase(engl);
+       24:  356:			japn = uppercase(japn);
+       48:  357:			eTranslations[japn] = engl;
+        -:  358:		//	cout << japn << "/" << engl << "---" << endl;
+      24*:  359:		}
+       16:  360:		else if (counter == 3) {
+       16:  361:			string sent = s;
+       16:  362:			string sent1 = readline(ins);
+       16:  363:			if (!ins) break;
+       16:  364:			sent = uppercase(sent);
+       16:  365:			sent1 = uppercase(sent1);
+       32:  366:			samplesentences[sent] = sent1;
+      16*:  367:		}
+       78:  368:	}
+        -:  369:	//end of translation input
+        -:  370:	//return RUN_ALL_TESTS();
+        1:  371:	string test = "helloThere";
+        1:  372:	int i = 0;
+        -:  373:	
+        -:  374:  
+        -:  375:	//benchmark stuff 2
+        1:  376:	auto start = std::chrono::high_resolution_clock::now();
+        1:  377:	thingtobench(); RUN_ALL_TESTS();
+        1:  378:	auto end = std::chrono::high_resolution_clock::now();
+        1:  379:	std::chrono::duration<double> elapsed = end - start;
+        1:  380:	std::cout << "time: " << elapsed.count() << " seconds\n";
+        -:  381:
+        -:  382:
+        1:  383:	while (true) {
+        2:  384:	int choice = read("Please enter an option:\n1) Run all tests\n2) Translate Number\n3) English to Japanese\n4) Japanese to English\n5) Auto Translate\n6) Add to Dictionary\n7) Quit\n");
+        -:  385:	// Warui #2.1: Warui Part One (MUST BE A FUNCTION) and all tests written
+        -:  386:	//
+       1*:  387:	if (choice == TESTS) return RUN_ALL_TESTS();
+        -:  388:
+        1:  389:	if (choice == WARUI) {
+    #####:  390:		cout << "Please enter a number to translate between 0 and 1009999:" << endl;
+    #####:  391:		cin >> i;
+    #####:  392:		if (!cin or i < 0) die();
+    #####:  393:		cout << warui(i);
+    #####:  394:		exit(EXIT_SUCCESS);
+        -:  395:			//cout << warui(8) << "S" << endl;
+        -:  396:	//	cout << uppercase(test);
+        -:  397:
+        -:  398:	}
+        -:  399:	if (choice == ENGLTOJAPN) {
+    #####:  400:		string EnglSent = readline("Please enter a sentence to translate into Japanese:\n");
+        -:  401:	//	EnglSent = uppercase(EnglSent);
+    #####:  402:		for (char c : EnglSent) if (isdigit(c)) die();
+    #####:  403:		if (EnglSent == "QUIT") exit(EXIT_SUCCESS);
+    #####:  404:		string japnsentence;
+    #####:  405:		istringstream iss (EnglSent);
+    #####:  406:		while (iss) {
+    #####:  407:			string temp;
+    #####:  408:			iss >> temp;
+    #####:  409:			if (!iss) break;
+    #####:  410:			string tempLow = lowercase(temp);
+        -:  411:			//if (!dict_db.contains(tempLow) and !eTranslations.contains(tempLow)) cout << "Invalid Word!" << endl;
+    #####:  412:			temp = uppercase(temp);
+    #####:  413:			if (!jTranslations.contains(temp)) cout << "<missing> ";
+    #####:  414:			else japnsentence += translator(true, temp) + " ";
+        -:  415://			japnsentence + " ";
+    #####:  416:		}
+    #####:  417:		cout << japnsentence << endl;
+    #####:  418:		exit(EXIT_SUCCESS);
+        -:  419:		
+    =====:  420:	}
+        -:  421:	if (choice == JAPNTOENGL) {
+        1:  422:		string japnsentence = readline("Please enter a sentence to translate into English:\n");
+        -:  423:	//	EnglSent = uppercase(EnglSent);
+       4*:  424:		for (char c : japnsentence) if (isdigit(c)) die();
+       1*:  425:		if (japnsentence == "QUIT") exit(EXIT_SUCCESS);
+        1:  426:		string EnglSent;
+        1:  427:		istringstream iss (japnsentence);
+        2:  428:		while (iss) {
+        2:  429:			string temp;
+        2:  430:			iss >> temp;
+        2:  431:			if (!iss) break;
+        -:  432:			//if (!dict_db.contains(temp)) cout << "F1";
+        1:  433:			temp = uppercase(temp);
+        1:  434:			if (!eTranslations.contains(temp)) EnglSent += "<missing> ";
+        -:  435:	   	//	cout << temp << " is not in the dictionary. \n";
+        -:  436:		//	string trans = readline("Please enter the translation into the database\n");
+        -:  437:		//	trans = uppercase(trans);
+        -:  438:	//		jTranslations.insert({temp, trans});
+        -:  439:		//	eTranslations.insert({trans,temp});
+        -:  440:		//	exit(EXIT_SUCCESS);
+    #####:  441:			else EnglSent += translator(false, temp) + " ";
+        -:  442://			japnsentence + " ";
+        2:  443:		}
+        1:  444:		cout << EnglSent << endl;
+        1:  445:		exit(EXIT_SUCCESS);
+        -:  446:		
+    =====:  447:	}
+        -:  448:	if (choice == AUTOTRANS) {
+    #####:  449:		int counterengl = 0;
+    #####:  450:		int countwords = 0;
+    #####:  451:		string sentencetrans;
+    #####:  452:		string sentence = readline("Please enter a sentence to auto translate: \n");
+    #####:  453:		string sentence1 = sentence;
+    #####:  454:		istringstream iss (sentence);
+    #####:  455:		while (iss) {
+    #####:  456:			vector<string> vec;
+    #####:  457:			string word;
+    #####:  458:			iss >> word;
+    #####:  459:			if (!iss) break;
+    #####:  460:			countwords++;
+    #####:  461:			word = lowercase(word);
+    #####:  462:			if (dict_db.contains(word)) counterengl++;
+    #####:  463:			word = uppercase(word);
+    #####:  464:		}
+    #####:  465:			stringstream iss2 (sentence1);
+    #####:  466:			while (iss2) {
+    #####:  467:			string help;
+    #####:  468:			iss2 >> help;
+    #####:  469:			if (!iss2) break;
+    #####:  470:			help = uppercase(help);
+        -:  471:		//	cout << help << endl;
+    #####:  472:			if (counterengl >= countwords / 2 ) {
+    #####:  473:				if (!jTranslations.contains(help)) sentencetrans += "<missing> ";
+    #####:  474:				else sentencetrans += translator(true,help) + " ";
+        -:  475:				}
+    #####:  476:			else if (counterengl < countwords / 2) {
+    #####:  477:				if (!eTranslations.contains(help)) sentencetrans += "<missing> ";
+    #####:  478:				else sentencetrans += translator(false,help) + " ";
+        -:  479:				}
+    #####:  480:			}
+    #####:  481:			cout << sentencetrans << endl;
+    #####:  482:			break;
+    #####:  483:		}
+        -:  484:	if (choice == INSERT) {
+    #####:  485:		unordered_map<string,string> inertedtranslations;
+    #####:  486:		while (true) {
+    #####:  487:			string insert = read("Give me a word in English (QUIT to quit):\n");
+        -:  488:		//	if (insert == "QUIT") break;
+    #####:  489:			string insertjapn = read("Give me the same word in Japanese (QUIT to quit):\n");
+    #####:  490:			if (insert == "QUIT") break;
+    #####:  491:			if (insertjapn == "QUIT") break;
+    #####:  492:			eTranslations[insertjapn] = insert;
+    #####:  493:			jTranslations[insert] = insertjapn;
+    #####:  494:			inertedtranslations[insert] = insertjapn;
+    #####:  495:			}
+    #####:  496:		string file1 = read("Please enter a file you want to write to: \n");
+    #####:  497:		ofstream outusr(file1);
+    #####:  498:		for (const auto &s : inertedtranslations) outusr << s.first << endl << s.second << endl << endl;
+    #####:  499:		outusr << jtoE << endl;
+    #####:  500:		for (const auto &s : jTranslations) {
+    #####:  501:			eTranslations[s.second] = s.first;
+    #####:  502:			outusr << s.first << endl << s.second << endl << endl;
+        -:  503:		}
+    #####:  504:		outusr << etoJ << endl;
+    #####:  505:		for (const auto &s : eTranslations) {
+        -:  506:		//	string s1 = uppercase(s.second), s2 = uppercase(s.first);
+    #####:  507:			jTranslations[s.second] = s.first;
+    #####:  508:			outusr << s.first << endl << s.second << endl << endl;
+        -:  509:		} 
+    #####:  510:		outusr << samples << endl;
+    #####:  511:		for (const auto &s : samplesentences) {
+    #####:  512:		outusr << s.first<< endl << s.second << endl << endl;
+        -:  513:			}
+    #####:  514:		}
+        -:  515:		break;
+        -:  516:		
+        -:  517:
+        -:  518:	if (choice == QUIT) { 
+        -:  519:		ofstream outs2("Mihongo.txt", ofstream::out);
+        -:  520:		outs2 << jtoE << endl;
+        -:  521:		for (const auto &s : jTranslations) {
+        -:  522:			eTranslations[s.second] = s.first;
+        -:  523:			outs2 << s.first << endl << s.second << endl << endl;
+        -:  524:		}
+        -:  525:		outs2 << etoJ << endl;
+        -:  526:		for (const auto &s : eTranslations) {
+        -:  527:		//	string s1 = uppercase(s.second), s2 = uppercase(s.first);
+        -:  528:			jTranslations[s.second] = s.first;
+        -:  529:			outs2 << s.first << endl << s.second << endl << endl;
+        -:  530:		} 
+        -:  531:		outs2 << samples << endl;
+        -:  532:		for (const auto &s : samplesentences) {
+        -:  533:		outs2 << s.first<< endl << s.second << endl << endl;
+        -:  534:			}
+        -:  535:		}
+        -:  536:		break;
+        -:  537:    }
+        -:  538:
+        -:  539:
+        -:  540: /* if (choice == BENCHMARK) {
+        -:  541:	  //benchmark stuff 2
+        -:  542:  	auto start = std::chrono::high_resolution_clock::now();
+        -:  543:  	thingtobench(); RUN_ALL_TESTS();
+        -:  544:  	auto end = std::chrono::high_resolution_clock::now();
+        -:  545:  	std::chrono::duration<double> elapsed = end - start;
+        -:  546:  	std::count << "time: " << elapsed.count() << " seconds\n";
+        -:  547:    break;
+        -:  548:    }
+        -:  549:	}*/
+        -:  550:	// Warui #2.2: Read from dictionary and write to file the translations
+        -:  551:	// Warui #2.3: Translate sentences and auto detect translation done
+        -:  552:	// for autodetect count how many words it'll get turned into for one or the other, translate to one with the most.
+        -:  553:	
+     393*:  554:}
