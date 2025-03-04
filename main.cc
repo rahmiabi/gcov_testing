@@ -4,6 +4,8 @@
 #include <vector>
 #include <unordered_set>
 #include <unordered_map>
+#include <iostream>
+#include <chrono>
 using namespace std;
 
 // DO NOT TOUCH THESE OR YOU WILL HAVE A BAD TIME!
@@ -259,8 +261,18 @@ TEST(Warui, EdgeTests) {
 
 }
 
+//benmark stuff 1
+void thingtobench() {
+	volatile int sum = 0;
+	for (int i = 0; i < 1000000; ++i) {
+		sum += i;
+	}
+}
 
 int main(int argc, char** argv) {
+
+
+
 	testing::InitGoogleTest(&argc, argv); // DO NOT TOUCH THIS!
 	enum choices{TESTS = 1, WARUI, ENGLTOJAPN, JAPNTOENGL, AUTOTRANS, INSERT, QUIT = 7};
 	//Inputs all the words.
@@ -359,11 +371,21 @@ int main(int argc, char** argv) {
 	string test = "helloThere";
 	int i = 0;
 	
+  
+	//benchmark stuff 2
+	auto start = std::chrono::high_resolution_clock::now();
+	thingtobench(); RUN_ALL_TESTS();
+	auto end = std::chrono::high_resolution_clock::now();
+	std::chrono::duration<double> elapsed = end - start;
+	std::cout << "time: " << elapsed.count() << " seconds\n";
+
+
 	while (true) {
 	int choice = read("Please enter an option:\n1) Run all tests\n2) Translate Number\n3) English to Japanese\n4) Japanese to English\n5) Auto Translate\n6) Add to Dictionary\n7) Quit\n");
 	// Warui #2.1: Warui Part One (MUST BE A FUNCTION) and all tests written
 	//
 	if (choice == TESTS) return RUN_ALL_TESTS();
+
 	if (choice == WARUI) {
 		cout << "Please enter a number to translate between 0 and 1009999:" << endl;
 		cin >> i;
@@ -512,7 +534,19 @@ int main(int argc, char** argv) {
 			}
 		}
 		break;
-	}
+    }
+
+
+ /* if (choice == BENCHMARK) {
+	  //benchmark stuff 2
+  	auto start = std::chrono::high_resolution_clock::now();
+  	thingtobench(); RUN_ALL_TESTS();
+  	auto end = std::chrono::high_resolution_clock::now();
+  	std::chrono::duration<double> elapsed = end - start;
+  	std::count << "time: " << elapsed.count() << " seconds\n";
+    break;
+    }
+	}*/
 	// Warui #2.2: Read from dictionary and write to file the translations
 	// Warui #2.3: Translate sentences and auto detect translation done
 	// for autodetect count how many words it'll get turned into for one or the other, translate to one with the most.
