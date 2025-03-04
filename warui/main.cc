@@ -26,7 +26,8 @@ int main() {
 	int step = 0;
 
 
-	cout << "Please enter a number to start with: " << endl;
+
+/*	cout << "Please enter a number to start with: " << endl;
 	cin >> start;
 	if (!cin or start < MIN or start > MAX) {
 		cout << "BAD INPUT!" << endl;
@@ -50,8 +51,8 @@ int main() {
 	if (!cin or step == 0 or start < MIN or end > MAX) {
 		cout << "INPUT ERROR" << endl;
 		return 1;
-	}
-	for (int i = start; i <= end; i += step) {
+	} */
+	for (int i = 0; i <= 99999; i++) {
 		/*
 		string numbers;
 		numbers.push_back(i);
