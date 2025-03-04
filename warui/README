@@ -1,0 +1,264 @@
+==============================
+__        __               _ 
+\ \      / /_ _ _ __ _   _(_)
+ \ \ /\ / / _` | '__| | | | |
+  \ V  V / (_| | |  | |_| | |
+   \_/\_/ \__,_|_|   \__,_|_|
+==============================
+
+"Omae wa mou shindeiru" - Japanese Proverb
+
+Japanese is listed by the State Department as the hardest language for English
+learners to learn. So in this assignment you will get to translate numbers into
+Japanese and see if the State Department is right or not.
+
+In this assignment, you will implement a program that will take in a number in
+Arabic numerals and output it in the full Japanese translation. You are given a
+dataset filled with all the Japanese words you need, your job is to implement
+them using what you've learned about loops, conditionals, and MODULUS (YAY!)
+
+Example:
+If the user says to print the numbers from 4 to 6 in Japanese, your code will output:
+4 YON
+5 GO
+6 ROKU
+
+In other words, you will print out the Arabic numeral, and then the Japanese translation of it.
+
+You will have to write code that can translate any Arabic numeral from 0 to a bit over a million.
+
+You might not know Japanese. That's okay, we are giving you a dictionary with
+all the Japanese words you will need to know in it...
+
+A brief explanation of vectors:
+This will be your first interaction with vectors. Essentially, a vector allows
+you to make a bunch of variables at once. So we made a bunch of strings
+containing all the words in Japanese you need to know for this assignment. 
+
+The vector called "digits" is your dictionary for the numbers 0 to 9.
+
+It looks like this:
+0 "ZERO"
+1 "ICHI"
+2 "NI"
+3 "SAN"
+4 "YON"
+5 "GO"
+6 "ROKU"
+7 "NANA"
+8 "HACHI"
+9 "KYUU"
+
+You can get values from the vector by using .at(index), like this:
+cout << digits.at(0) << endl; // This will print "ZERO"
+ or
+string s = digits.at(7); // This will set s equal to "NANA"
+
+We have a second vector for powers of 10:
+0 "JYUU"  (Jyuu means 10)
+1 "HYAKU" (Hyaku means 100)
+2 "SEN"   (Sen means 1000)
+3 "MAN"   (Man means 10,000)
+
+cout << powers.at(3) << endl; //Will print out "MAN" to the screen
+
+This assignment is too big to do all at once.
+
+You will need to work on it a little at a time, and build it up.
+
+Recommended Implementation Path:
+1) Start by printing the numbers from 0 to 10 in a loop.
+2) Compile it, test it, make sure it's really solid before moving on.
+3) Then get the ability to print the numbers from 11 to 100.
+4) Then get numbers from 101 to 999 working.
+5) Then get numbers from 1000 to 9999 working
+6) Then get numbers from 10000 to 999999 working
+7) Then get the numbers over 1 million working
+
+**At each step, compile it, test it, run it yourself a bunch of times.**
+DON'T RELY ON THE AUTOGRADER EARLY ON. YOU NEED TO TEST CODE YOURSELF. 
+The autograder is great when you're getting close to being finished, but doesn't
+help a whole lot except with error checks in early development.
+
+
+Here are the rules for numbers in Japanese:
+
+== Numbers from 0 to 10 ==
+
+Just print the entry in the digits dictionary above. If you want to know that 6 is
+"ROKU" in Japanese, then cout << digits.at(6) and you'll see it prints ROKU.
+
+Fun fact, the only time your code should print out ZERO is when the number is
+exactly 0. You don't use it anywhere else in this program.
+
+== Numbers from 10 to 19 ==
+
+10 is just JYUU (not JYUU ZERO)
+Every number after that is just JYUU + the digit, for example:
+11 is JYUU ICHI
+12 is JYUU NI
+13 is JYUU SAN
+etc.
+
+== Numbers from 20 to 99 ==
+
+All numbers from 20 to 99 follow the same format (no irregular words).
+
+The pattern is "TENS_DIGIT JYUU ONES_DIGIT" (but don't print ZERO)
+
+33 is SAN JYUU SAN ("3 times 10 plus 3")
+45 is YON JYUU GO ("4 times 10 plus 5")
+50 is GO JYUU (not GO JYUU ZERO)
+96 is KYUU JYUU ROKU ("9 times 10 plus 6")
+
+The rule for numbers is simple: If a user inputs 33, that is like saying
+three tens three or SAN JYUU SAN. For numbers up to 99 it follows that pattern.
+So if a user inputs 93, it is nine tens three or KYUU JYUU SAN. 
+
+== Numbers from 100 to 199 == 
+
+The pattern is "HYAKU <then follow the pattern above for 2 digit numbers>"
+
+100 is HYAKU
+101 is HYAKU ICHI
+102 is HYAKU NI
+110 is HYAKU JYUU
+123 is HYAKU NI JYUU SAN ("One hundred 2 tens plus 3")
+
+== Numbers from 200 to 999 ==
+
+The pattern is "HUNDREDS_DIGIT HYAKU <then follow the pattern above for 2 digit numbers>"
+
+EXCEPTIONS:
+300 is SAN BYAKU (not SAN HYAKU)
+600 is ROPPYAKU (not ROKU HYAKU) 
+800 is HAPPYAKU (not HACHI HYAKU)
+
+You will probably need to special case those three exceptions with their own if statements
+
+== Numbers from 1000 to 1999 ==
+
+The pattern is "SEN <then follow the pattern above for 3 digit numbers>"
+
+For example:
+1000 is SEN
+1002 is SEN NI
+1011 is SEN JYUU ICHI
+1100 is SEN HYAKU
+1842 is SEN HAPPYAKU YON JYUU NI
+
+== Numbers from 2000 to 9999 ==
+
+The pattern is "THOUSANDS_DIGIT SEN <then follow the pattern above for 3 digit numbers>"
+
+For example:
+2000 is NI SEN ("two thousands")
+2024 is NI SEN NI JYUU YON ("two thousands two tens and four")
+2445 is NI SEN YON HYAKU YON JYUU GO ("two thousands four hundreds four tens and five") 
+4567 is YON SEN GO HYAKU ROKU JYUU NANA ("four thousands five hundreds six tens and seven")
+
+EXCEPTIONS:
+3000 is SAN ZEN (not SAN SEN)
+8000 is HASSEN (not HACHI SEN)
+
+3400 is SAN ZEN YON HYAKU
+
+== Numbers from 10000 and up ==
+
+X = number / 10'000
+
+The pattern is "<X> MAN <then follow the pattern above for 4 digit numbers>"
+
+Unlike with hyaku, sen, and jyuu, if you have one man (10,000) you write ICHI MAN
+
+10,000 is ICHI MAN ("one ten-thousands")
+10,010 is ICHI MAN JYUU ("one ten-thousands and 10")
+100,000 is JYUU MAN ("ten ten-thousands")
+142,696 is JYUU YON MAN NI SEN ROPPYAKU KYUU JYUU ROKU ("14 ten-thousands 2 thousands 6 hundreds 9 tens and 6")
+1,000,000 is HYAKU MAN ("hundred ten-thousands")
+
+=====
+
+To get your code to compile and run:
+1) Delete the static_assert and
+2) The die() calls at the top of main.
+
+"Die Die Die" --Reaper (a programmer who vets input)
+
+=====
+
+Potential Errors:
+Not a number
+Starting being bigger than ending
+Starting, ending, or step size less than 0
+Starting, ending, or step size greater than 1'009'999
+Step size of 0
+
+=======================================================
+SAMPLE RUN #1: (starting at 1, ending at 10, step by 1
+=======================================================
+Please enter a number to start with:
+1
+Please enter a number to end with:
+10
+Please enter your step size:
+1
+1 ICHI
+2 NI
+3 SAN
+4 YON
+5 GO
+6 ROKU
+7 NANA
+8 HACHI
+9 KYUU
+10 JYUU      
+
+=======================================================
+SAMPLE RUN #2: (starting at 5, ending at 20, step by 2
+=======================================================
+Please enter a number to start with:
+5
+Please enter a number to end with:
+20
+Please enter your step size:
+2
+5 GO 
+7 NANA
+9 KYUU
+11 JYUU ICHI
+13 JYUU SAN
+15 JYUU GO
+17 JYUU NANA
+19 JYUU KYU
+
+=========================================================
+SAMPLE RUN #3: (starting at 90, ending at 110, step by 1
+=========================================================
+Please enter a number to start with:
+90
+Please enter a number to end with:
+110
+Please enter your step size:
+1
+90 KYUU JYUU
+91 KYUU JYUU ICHI
+92 KYUU JYUU NI
+93 KYUU JYUU SAN
+94 KYUU JYUU YON
+95 KYUU JYUU GO
+96 KYUU JYUU ROKU
+97 KYUU JYUU NANA
+98 KYUU JYUU HACHI
+99 KYUU JYUU KYUU
+100 HYAKU
+101 HYAKU ICHI
+102 HYAKU NI
+103 HYAKU SAN
+104 HYAKU YON
+105 HYAKU GO
+106 HYAKU ROKU
+107 HYAKU NANA
+108 HYAKU HACHI
+109 HYAKU KYUU
+110 HYAKU JYUU
